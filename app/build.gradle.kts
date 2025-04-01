@@ -2,17 +2,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    kotlin("kapt")
     id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "uk.ac.tees.mad.smartexpensecalculator"
+    namespace = "uk.ac.tees.mad.expensetracker"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "uk.ac.tees.mad.smartexpensecalculator"
+        applicationId = "uk.ac.tees.mad.expensetracker"
         minSdk = 30
         targetSdk = 35
         versionCode = 1
@@ -42,10 +42,6 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -57,14 +53,22 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    // dagger hilt
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-compiler:2.51.1")
+    // Hilt for ViewModel
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    implementation(libs.androidx.navigation.compose)
+    implementation("androidx.navigation:navigation-compose:2.8.7")
+
+    // room db
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

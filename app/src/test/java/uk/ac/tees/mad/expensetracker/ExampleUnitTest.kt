@@ -1,4 +1,4 @@
-package uk.ac.tees.mad.smartexpensecalculator
+package uk.ac.tees.mad.expensetracker
 
 import org.junit.Test
 

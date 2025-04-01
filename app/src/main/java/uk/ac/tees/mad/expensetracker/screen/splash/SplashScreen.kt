@@ -1,18 +1,20 @@
-package uk.ac.tees.mad.smartexpensecalculator.screen
+package uk.ac.tees.mad.expensetracker.screen.splash
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,14 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import kotlinx.coroutines.delay
-import uk.ac.tees.mad.smartexpensecalculator.R
-import uk.ac.tees.mad.smartexpensecalculator.ui.theme.SmartExpenseCalculatorTheme
+import uk.ac.tees.mad.expensetracker.R
+import uk.ac.tees.mad.expensetracker.util.Routes
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(navController: NavController) {
     var logoShrunk by remember { mutableStateOf(false) }
     var showProgressbar by remember { mutableStateOf(false) }
 
@@ -52,12 +54,18 @@ fun SplashScreen() {
         logoShrunk = true
         delay(1000)
         showProgressbar = true
-        delay(2000)
+        delay(1500)
+        navController.navigate(Routes.AUTH_SCREEN){
+            popUpTo(Routes.SPLASH_SCREEN){
+                inclusive = true
+            }
+        }
     }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -71,26 +79,17 @@ fun SplashScreen() {
             AnimatedVisibility(
                 showProgressbar
             ) {
-                Spacer(modifier = Modifier.width(16.dp))
                 LinearProgressIndicator(
                     progress = { animatedProgress },
                     modifier = Modifier
+                        .padding(start = 16.dp)
                         .width(150.dp)
                         .height(8.dp),
-                    color = Color(0xFF3DC0CC),
+                    color = Color(0xFF1eb4eb),
                     trackColor = Color.Gray,
                     strokeCap = StrokeCap.Round,
                 )
             }
         }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun SplashScreenPrev() {
-    SmartExpenseCalculatorTheme {
-        SplashScreen()
     }
 }

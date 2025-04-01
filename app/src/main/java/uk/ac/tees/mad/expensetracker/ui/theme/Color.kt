@@ -1,4 +1,4 @@
-package uk.ac.tees.mad.smartexpensecalculator.ui.theme
+package uk.ac.tees.mad.expensetracker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

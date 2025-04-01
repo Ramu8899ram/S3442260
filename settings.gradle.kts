@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Smart Expense Calculator"
+rootProject.name = "ExpenseTracker"
 include(":app")
+ 

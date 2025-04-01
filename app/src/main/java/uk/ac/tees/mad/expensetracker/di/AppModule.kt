@@ -1,4 +1,4 @@
-package uk.ac.tees.mad.smartexpensecalculator.di
+package uk.ac.tees.mad.expensetracker.di
 
 import dagger.Module
 import dagger.hilt.InstallIn
