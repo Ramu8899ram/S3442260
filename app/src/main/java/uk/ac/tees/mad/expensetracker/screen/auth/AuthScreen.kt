@@ -51,6 +51,15 @@ fun AuthScreen(navController: NavController,viewModel: AuthViewModel = hiltViewM
     val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
     val context = LocalContext.current
 
+    LaunchedEffect(isLoginSuccess) {
+        if (isLoginSuccess){
+            navController.navigate(Routes.MAIN_SCREEN){
+                popUpTo(Routes.AUTH_SCREEN){
+                    inclusive = true
+                }
+            }
+        }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background

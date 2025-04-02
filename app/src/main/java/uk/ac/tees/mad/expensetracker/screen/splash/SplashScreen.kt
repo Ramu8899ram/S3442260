@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import uk.ac.tees.mad.expensetracker.R
 import uk.ac.tees.mad.expensetracker.util.Routes
@@ -49,13 +50,15 @@ fun SplashScreen(navController: NavController) {
         label = "Progress Animation"
     )
 
+    val user = FirebaseAuth.getInstance().currentUser
+
     LaunchedEffect(Unit) {
         delay(500)
         logoShrunk = true
         delay(1000)
         showProgressbar = true
         delay(1500)
-        navController.navigate(Routes.AUTH_SCREEN){
+        navController.navigate(if(user==null) Routes.AUTH_SCREEN else Routes.MAIN_SCREEN){
             popUpTo(Routes.SPLASH_SCREEN){
                 inclusive = true
             }
