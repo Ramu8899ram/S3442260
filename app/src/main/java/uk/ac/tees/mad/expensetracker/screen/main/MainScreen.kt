@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import uk.ac.tees.mad.expensetracker.component.DashboardTopAppbar
 import uk.ac.tees.mad.expensetracker.screen.dashboard.DashboardScreen
+import uk.ac.tees.mad.expensetracker.screen.settings.SettingsScreen
 
 @Composable
 fun MainScreen(navController: NavController) {
@@ -43,6 +44,7 @@ fun MainScreen(navController: NavController) {
         val modifier = Modifier.padding(paddingValues)
         when (selectedScreen.intValue) {
             0 -> DashboardScreen(modifier)
+            2 -> SettingsScreen(modifier, navController)
         }
     }
 }
