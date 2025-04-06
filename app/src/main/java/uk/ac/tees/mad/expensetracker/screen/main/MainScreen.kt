@@ -11,17 +11,23 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import uk.ac.tees.mad.expensetracker.component.DashboardTopAppbar
 import uk.ac.tees.mad.expensetracker.screen.dashboard.DashboardScreen
 import uk.ac.tees.mad.expensetracker.screen.settings.SettingsScreen
+import uk.ac.tees.mad.expensetracker.util.Routes
 
 @Composable
 fun MainScreen(navController: NavController) {
@@ -50,6 +56,15 @@ fun MainScreen(navController: NavController) {
             if (selectedScreen.intValue == 0) {
                 DashboardTopAppbar()
             }
+            else if(selectedScreen.intValue == 2){
+                Text(
+                    "Settings",
+                    fontSize = 26.sp,
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 30.dp, start = 16.dp)
+                )
+            }
         },
         bottomBar = {
             MainBottomNavigationBar(onSelect = {
@@ -58,7 +73,9 @@ fun MainScreen(navController: NavController) {
         },
         floatingActionButton = {
             if (selectedScreen.intValue == 0) {
-                FloatingActionButton({}) {
+                FloatingActionButton({
+                    navController.navigate(Routes.ADD_EXPENSE_SCREEN)
+                }) {
                     Icon(
                         Icons.Default.Add,
                         contentDescription = "Add"

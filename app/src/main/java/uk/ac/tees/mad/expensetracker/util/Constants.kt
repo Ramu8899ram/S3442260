@@ -14,4 +14,15 @@ object Constants {
             CategoryModel("Others",600.44,30,"Card",R.drawable.others, MyColors.categoryColor6)
         )
     }
+
+    fun getCurrencyIcon(currency: String): Int{
+        return when(currency){
+            "inr" -> R.drawable.baseline_currency_rupee_24
+            "eur" -> R.drawable.baseline_euro_24
+            "jpy" -> R.drawable.baseline_currency_yen_24
+            "gbp" -> R.drawable.baseline_currency_pound_24
+            "chf" -> R.drawable.baseline_currency_franc_24
+            else -> R.drawable.baseline_attach_money_24
+        }
+    }
 }

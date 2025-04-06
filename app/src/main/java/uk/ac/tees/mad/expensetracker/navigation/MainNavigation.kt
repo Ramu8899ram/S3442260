@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import uk.ac.tees.mad.expensetracker.screen.addexpense.AddExpenseScreen
 import uk.ac.tees.mad.expensetracker.screen.auth.AuthScreen
 import uk.ac.tees.mad.expensetracker.screen.main.MainScreen
 import uk.ac.tees.mad.expensetracker.screen.splash.SplashScreen
@@ -25,6 +26,10 @@ fun MainNavigation() {
 
         composable(Routes.MAIN_SCREEN) {
             MainScreen(navController)
+        }
+
+        composable(Routes.ADD_EXPENSE_SCREEN) {
+            AddExpenseScreen()
         }
     }
 }
