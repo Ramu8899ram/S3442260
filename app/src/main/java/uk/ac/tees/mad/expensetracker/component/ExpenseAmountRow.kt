@@ -17,6 +17,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,11 +34,11 @@ import uk.ac.tees.mad.expensetracker.util.Constants
 @Composable
 fun ExpenseAmountRow(
     onAmountChange:(String)-> Unit,
-    onCurrencyChange:(String)-> Unit
+    onCurrencyChange:(Int)-> Unit
 ) {
     val amount = rememberSaveable { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
-    var currentCurrency by rememberSaveable { mutableStateOf("USD") }
+    var currentCurrency by rememberSaveable { mutableIntStateOf(0) }
     val currencyOptions = listOf("usd","inr","eur", "jpy", "gbp", "aud","cad", "chf")
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Amount:", fontSize = 22.sp)
@@ -69,7 +70,7 @@ fun ExpenseAmountRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = currentCurrency.uppercase(), fontSize = 18.sp)
+                Text(text = currencyOptions[currentCurrency].uppercase(), fontSize = 18.sp)
                 Icon(Icons.Default.ArrowDropDown, contentDescription = "Dropdown Icon")
             }
 
@@ -77,12 +78,12 @@ fun ExpenseAmountRow(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                currencyOptions.forEach { option ->
+                currencyOptions.forEachIndexed { idx,option ->
                     DropdownMenuItem(
                         text = { Text(option.uppercase(), fontSize = 16.sp) },
                         onClick = {
-                            currentCurrency = option
-                            onCurrencyChange(option)
+                            currentCurrency = idx
+                            onCurrencyChange(idx)
                             expanded = false
                         }
                     )

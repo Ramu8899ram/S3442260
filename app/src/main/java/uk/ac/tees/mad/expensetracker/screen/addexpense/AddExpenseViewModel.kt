@@ -16,7 +16,7 @@ class AddExpenseViewModel @Inject constructor(
 ): ViewModel() {
 
     fun addExpense(
-        amount: String, currency: String, pMode: Int,
+        amount: String, currency: Int, pMode: Int,
         category: Int, note: String, context: Context
     ) {
         if (amount.isEmpty()){

@@ -37,7 +37,7 @@ fun AddExpenseScreen(
     val selectedCategory = rememberSaveable { mutableIntStateOf(0) }
     val note = rememberSaveable { mutableStateOf("") }
     val amount = rememberSaveable { mutableStateOf("") }
-    val selectedCurrency = rememberSaveable { mutableStateOf("usd") }
+    val selectedCurrency = rememberSaveable { mutableIntStateOf(0) }
     val context = LocalContext.current
     Scaffold(
         topBar = {
@@ -60,7 +60,7 @@ fun AddExpenseScreen(
         ){
             ExpenseAmountRow(
                 onAmountChange = {amount.value = it},
-                onCurrencyChange = {selectedCurrency.value = it}
+                onCurrencyChange = {selectedCurrency.intValue = it}
             )
             PaymentModeSelector(
                 {selectedPaymentMode.intValue = it},

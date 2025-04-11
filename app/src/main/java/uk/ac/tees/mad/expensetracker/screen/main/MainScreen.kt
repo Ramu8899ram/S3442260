@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import uk.ac.tees.mad.expensetracker.component.DashboardTopAppbar
 import uk.ac.tees.mad.expensetracker.screen.dashboard.DashboardScreen
+import uk.ac.tees.mad.expensetracker.screen.history.HistoryScreen
 import uk.ac.tees.mad.expensetracker.screen.settings.SettingsScreen
 import uk.ac.tees.mad.expensetracker.util.Routes
 
@@ -56,7 +57,16 @@ fun MainScreen(navController: NavController) {
             if (selectedScreen.intValue == 0) {
                 DashboardTopAppbar()
             }
-            else if(selectedScreen.intValue == 2){
+            else if(selectedScreen.intValue==1){
+                Text(
+                    "Activities",
+                    fontSize = 26.sp,
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 30.dp, start = 16.dp)
+                )
+            }
+            else{
                 Text(
                     "Settings",
                     fontSize = 26.sp,
@@ -87,6 +97,7 @@ fun MainScreen(navController: NavController) {
         val modifier = Modifier.padding(paddingValues)
         when (selectedScreen.intValue) {
             0 -> DashboardScreen(modifier)
+            1 -> HistoryScreen(modifier)
             2 -> SettingsScreen(modifier, navController)
         }
     }
