@@ -1,4 +1,4 @@
-package uk.ac.tees.mad.expensetracker.data.local
+package uk.ac.tees.mad.expensetracker.data.local.roomdb
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class ExpenseEntity(
     @PrimaryKey(autoGenerate = true) val id: Int=0,
     val amount: Double,
-    val currency: Int,
+    val currency: String,
     val paymentMode: Int,
     val category: Int,
     val note: String,

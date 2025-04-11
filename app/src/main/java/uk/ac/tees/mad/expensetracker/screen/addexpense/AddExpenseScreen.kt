@@ -15,10 +15,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import uk.ac.tees.mad.expensetracker.component.AddNotes
 import uk.ac.tees.mad.expensetracker.component.ExpenseAmountRow
 import uk.ac.tees.mad.expensetracker.component.PaymentModeSelector
@@ -26,10 +29,16 @@ import uk.ac.tees.mad.expensetracker.component.CategorySelector
 import uk.ac.tees.mad.expensetracker.component.AddReceipt
 
 @Composable
-fun AddExpenseScreen() {
+fun AddExpenseScreen(
+    navController: NavController,
+    viewModel: AddExpenseViewModel = hiltViewModel()
+) {
     val selectedPaymentMode = rememberSaveable { mutableIntStateOf(0) }
     val selectedCategory = rememberSaveable { mutableIntStateOf(0) }
     val note = rememberSaveable { mutableStateOf("") }
+    val amount = rememberSaveable { mutableStateOf("") }
+    val selectedCurrency = rememberSaveable { mutableStateOf("usd") }
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             Box(
@@ -49,7 +58,10 @@ fun AddExpenseScreen() {
             .padding(paddingValues)
             .fillMaxSize()
         ){
-            ExpenseAmountRow()
+            ExpenseAmountRow(
+                onAmountChange = {amount.value = it},
+                onCurrencyChange = {selectedCurrency.value = it}
+            )
             PaymentModeSelector(
                 {selectedPaymentMode.intValue = it},
                 selectedPaymentMode.intValue
@@ -63,7 +75,17 @@ fun AddExpenseScreen() {
             }
             AddReceipt()
             Spacer(modifier = Modifier.weight(1f))
-            Button({}, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Button({
+                viewModel.addExpense(
+                    amount = amount.value,
+                    currency = selectedCurrency.value,
+                    pMode = selectedPaymentMode.intValue,
+                    category = selectedCategory.intValue,
+                    note = note.value,
+                    context = context
+                )
+                navController.popBackStack()
+            }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text("Add", fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }
             Spacer(modifier = Modifier.weight(1f))

@@ -31,7 +31,10 @@ import androidx.compose.ui.unit.sp
 import uk.ac.tees.mad.expensetracker.util.Constants
 
 @Composable
-fun ExpenseAmountRow() {
+fun ExpenseAmountRow(
+    onAmountChange:(String)-> Unit,
+    onCurrencyChange:(String)-> Unit
+) {
     val amount = rememberSaveable { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var currentCurrency by rememberSaveable { mutableStateOf("USD") }
@@ -43,7 +46,8 @@ fun ExpenseAmountRow() {
 
             TextField(
                 value = amount.value,
-                onValueChange = { amount.value = it },
+                onValueChange = { amount.value = it
+                                onAmountChange(it)},
                 placeholder = { Text("0.00") },
                 leadingIcon = {
                     Icon(
@@ -78,6 +82,7 @@ fun ExpenseAmountRow() {
                         text = { Text(option.uppercase(), fontSize = 16.sp) },
                         onClick = {
                             currentCurrency = option
+                            onCurrencyChange(option)
                             expanded = false
                         }
                     )

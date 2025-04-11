@@ -29,7 +29,7 @@ fun MainNavigation() {
         }
 
         composable(Routes.ADD_EXPENSE_SCREEN) {
-            AddExpenseScreen()
+            AddExpenseScreen(navController)
         }
     }
 }

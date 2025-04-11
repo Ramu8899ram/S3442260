@@ -1,4 +1,4 @@
-package uk.ac.tees.mad.expensetracker.data.local
+package uk.ac.tees.mad.expensetracker.data.local.roomdb
 
 import android.content.Context
 import androidx.room.Database
