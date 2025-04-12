@@ -1,5 +1,12 @@
 package uk.ac.tees.mad.expensetracker.screen.addexpense
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +27,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import uk.ac.tees.mad.expensetracker.component.AddNotes
@@ -38,7 +46,17 @@ fun AddExpenseScreen(
     val note = rememberSaveable { mutableStateOf("") }
     val amount = rememberSaveable { mutableStateOf("") }
     val selectedCurrency = rememberSaveable { mutableIntStateOf(0) }
+    val receipt = rememberSaveable { mutableStateOf<Bitmap?>(null) }
     val context = LocalContext.current
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        if (bitmap != null) {
+            receipt.value = bitmap
+        }
+    }
+
     Scaffold(
         topBar = {
             Box(
@@ -73,15 +91,29 @@ fun AddExpenseScreen(
             AddNotes(note.value) {
                 note.value = it
             }
-            AddReceipt()
+            AddReceipt(
+                receipt.value,
+                onClick = {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.CAMERA
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        Toast.makeText(context, "Permission denied for camera", Toast.LENGTH_SHORT).show()
+                    } else {
+                        cameraLauncher.launch()
+                    }
+                }
+            )
             Spacer(modifier = Modifier.weight(1f))
             Button({
                 viewModel.addExpense(
                     amount = amount.value,
-                    currency = selectedCurrency.value,
+                    currency = selectedCurrency.intValue,
                     pMode = selectedPaymentMode.intValue,
                     category = selectedCategory.intValue,
                     note = note.value,
+                    image = receipt.value,
                     context = context
                 )
                 navController.popBackStack()

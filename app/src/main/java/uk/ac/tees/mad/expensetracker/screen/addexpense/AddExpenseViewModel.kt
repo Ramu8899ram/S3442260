@@ -1,6 +1,7 @@
 package uk.ac.tees.mad.expensetracker.screen.addexpense
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseEntity
 import uk.ac.tees.mad.expensetracker.data.repository.Repository
+import uk.ac.tees.mad.expensetracker.util.Utils
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +19,7 @@ class AddExpenseViewModel @Inject constructor(
 
     fun addExpense(
         amount: String, currency: Int, pMode: Int,
-        category: Int, note: String, context: Context
+        category: Int, note: String, image: Bitmap?, context: Context
     ) {
         if (amount.isEmpty()){
             Toast.makeText(context, "Add amount", Toast.LENGTH_SHORT).show()
@@ -37,7 +39,7 @@ class AddExpenseViewModel @Inject constructor(
             paymentMode = pMode,
             category = category,
             note = note,
-            receiptImage = ""
+            receiptImage = if (image!=null) Utils.bitmapToBase64(image)?:"" else ""
         )
         viewModelScope.launch {
             repository.insertExpense(entity)
