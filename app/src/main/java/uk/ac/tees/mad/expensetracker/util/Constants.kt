@@ -6,6 +6,7 @@ import uk.ac.tees.mad.expensetracker.model.CategoryModel
 object Constants {
     const val USERS = "users"
     const val EXPENSES = "expenses"
+    const val APIKEY = "18055e06d1a4298f7e678e99"
     fun getCategoryList(): List<CategoryModel>{
         return listOf(
             CategoryModel("Shopping",100.34,14,"Card",R.drawable.shopping, MyColors.categoryColor1),
@@ -37,5 +38,22 @@ object Constants {
             5-> CategoryModel("Entertainment",140.34,16,"Cash",R.drawable.entertainment, MyColors.categoryColor5)
             else -> CategoryModel("Others",600.44,30,"Card",R.drawable.others, MyColors.categoryColor6)
         }
+    }
+
+    fun getCurrency(curr:Int): String{
+        return when(curr){
+            1-> "INR"
+            2-> "EUR"
+            3-> "JPY"
+            4-> "GBP"
+            5-> "AUD"
+            6-> "CAD"
+            7-> "CHF"
+            else -> "USD"
+        }
+    }
+
+    fun getCurrencyList(): List<String>{
+        return listOf("USD","INR","EUR","JPY","GBP","AUD","CAD","CHF")
     }
 }

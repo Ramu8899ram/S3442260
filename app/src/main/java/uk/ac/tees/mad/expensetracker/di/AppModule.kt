@@ -9,6 +9,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import uk.ac.tees.mad.expensetracker.data.local.remote.ExchangeApiService
 import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseDao
 import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseDatabase
 import uk.ac.tees.mad.expensetracker.data.repository.Repository
@@ -51,5 +54,15 @@ object AppModule {
     @Singleton
     fun provideRepository(dao: ExpenseDao): Repository{
         return RepositoryImpl(dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideExchangeApiService(): ExchangeApiService{
+        return Retrofit.Builder()
+            .baseUrl("https://v6.exchangerate-api.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ExchangeApiService::class.java)
     }
 }

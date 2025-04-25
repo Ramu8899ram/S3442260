@@ -17,13 +17,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.expensetracker.R
 import uk.ac.tees.mad.expensetracker.component.CategoryExpenseItem
 import uk.ac.tees.mad.expensetracker.component.PeriodicExpenseRow
 import uk.ac.tees.mad.expensetracker.util.Constants
 
 @Composable
-fun DashboardScreen(modifier: Modifier = Modifier) {
+fun DashboardScreen(
+    modifier: Modifier = Modifier,
+    viewModel: DashboardViewModel = hiltViewModel()) {
     Column(
         modifier = modifier.fillMaxSize()
     ) {
