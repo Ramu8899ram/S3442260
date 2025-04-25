@@ -5,21 +5,27 @@ import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseEntity
 import uk.ac.tees.mad.expensetracker.data.repository.Repository
+import uk.ac.tees.mad.expensetracker.util.Constants
 import uk.ac.tees.mad.expensetracker.util.Utils
 import javax.inject.Inject
 
 @HiltViewModel
 class AddExpenseViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val fireStore: FirebaseFirestore,
+    private val auth: FirebaseAuth
 ): ViewModel() {
-
+    val userId = auth.currentUser?.uid?:""
     fun addExpense(
         amount: String, currency: Int, pMode: Int,
-        category: Int, note: String, image: Bitmap?, context: Context
+        category: Int, note: String, image: Bitmap?,
+        context: Context, onComplete:()-> Unit
     ) {
         if (amount.isEmpty()){
             Toast.makeText(context, "Add amount", Toast.LENGTH_SHORT).show()
@@ -41,9 +47,16 @@ class AddExpenseViewModel @Inject constructor(
             note = note,
             receiptImage = if (image!=null) Utils.bitmapToBase64(image)?:"" else ""
         )
-        viewModelScope.launch {
-            repository.insertExpense(entity)
-            Toast.makeText(context, "Expense add successfully", Toast.LENGTH_SHORT).show()
-        }
+        fireStore.collection(Constants.USERS)
+            .document(userId)
+            .collection(Constants.EXPENSES)
+            .add(entity)
+            .addOnSuccessListener{
+                viewModelScope.launch {
+                    repository.insertExpense(entity)
+                    Toast.makeText(context, "Expense add successfully", Toast.LENGTH_SHORT).show()
+                    onComplete()
+                }
+            }
     }
 }

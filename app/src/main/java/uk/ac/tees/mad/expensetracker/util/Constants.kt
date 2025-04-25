@@ -1,10 +1,11 @@
 package uk.ac.tees.mad.expensetracker.util
 
-import androidx.compose.ui.graphics.Color
 import uk.ac.tees.mad.expensetracker.R
 import uk.ac.tees.mad.expensetracker.model.CategoryModel
 
 object Constants {
+    const val USERS = "users"
+    const val EXPENSES = "expenses"
     fun getCategoryList(): List<CategoryModel>{
         return listOf(
             CategoryModel("Shopping",100.34,14,"Card",R.drawable.shopping, MyColors.categoryColor1),

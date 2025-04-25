@@ -115,8 +115,7 @@ fun AddExpenseScreen(
                     note = note.value,
                     image = receipt.value,
                     context = context
-                )
-                navController.popBackStack()
+                ){navController.popBackStack()}
             }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text("Add", fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }

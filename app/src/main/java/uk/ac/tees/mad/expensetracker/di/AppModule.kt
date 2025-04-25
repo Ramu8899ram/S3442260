@@ -3,6 +3,7 @@ package uk.ac.tees.mad.expensetracker.di
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFireStore(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
     @Provides
     @Singleton
