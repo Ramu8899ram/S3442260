@@ -58,12 +58,13 @@ fun ActivityItem(
                 Text(catModel.category, fontSize = 20.sp)
                 Text(getDateTimeFromMillis(expense.time), fontSize = 16.sp, color = Color.Gray)
             }
-            Icon(
-                imageVector = ImageVector.vectorResource(Constants.getCurrencyIcon(expense.currency)),
-                contentDescription = "currency_icon",
-                modifier = Modifier.size(20.dp)
+            CurrencyTextRow(
+                expense.amount.toString(),
+                Constants.getCurrencyIcon(expense.currency),
+                22,
+                false,
+                20
             )
-            Text(expense.amount.toString(), fontSize = 22.sp)
         }
         Spacer(Modifier.height(4.dp))
         HorizontalDivider(thickness = 1.dp, color = catModel.color)

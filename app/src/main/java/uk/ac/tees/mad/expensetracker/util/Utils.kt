@@ -5,10 +5,15 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
 import androidx.core.graphics.scale
+import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseEntity
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.github.mikephil.charting.data.BarEntry
+import com.google.gson.Gson
+import uk.ac.tees.mad.expensetracker.model.CurrencyResponse
+
 
 object Utils {
     fun getDateTimeFromMillis(millis: Long, format: String = "dd/MM/yyyy HH:mm a"): String {
@@ -17,7 +22,12 @@ object Utils {
         return sdf.format(date)
     }
 
-    fun bitmapToBase64(bitmap: Bitmap, maxWidth: Int = 800, maxHeight: Int = 800, quality: Int = 50): String? {
+    fun bitmapToBase64(
+        bitmap: Bitmap,
+        maxWidth: Int = 800,
+        maxHeight: Int = 800,
+        quality: Int = 50
+    ): String? {
         return try {
 
             val resizedBitmap = bitmap.scale(maxWidth, maxHeight)
@@ -41,5 +51,62 @@ object Utils {
             Log.e("base64ToBitmap", e.message.toString())
             null
         }
+    }
+
+    fun prepareChartData(
+        expenses: List<ExpenseEntity>,
+        currencyRate: CurrencyResponse
+    ): Pair<List<BarEntry>, List<String>> {
+        val groupedExpenses = expenses
+            .groupBy { it.time / (24 * 60 * 60 * 1000) } // Group by day
+            .mapValues { entry ->
+                entry.value.sumOf {
+                    exchange(
+                        currencyRate.conversion_rates["USD"]!!,
+                        currencyRate.conversion_rates[Constants.getCurrency(it.currency)]!!,
+                        it.amount
+                    )
+                }
+            } // Sum expenses per day
+            .toSortedMap()
+
+        val entries = mutableListOf<BarEntry>()
+        val labels = mutableListOf<String>()
+
+        groupedExpenses.entries.forEachIndexed { index, (day, totalAmount) ->
+            entries.add(BarEntry(index.toFloat(), totalAmount.toFloat()))
+
+            val date = SimpleDateFormat(
+                "MMM dd",
+                Locale.getDefault()
+            ).format(Date(day * 24 * 60 * 60 * 1000))
+            labels.add(date)
+        }
+
+        return Pair(entries, labels)
+    }
+
+    fun getExpenseSum(list: List<ExpenseEntity>, currencyRate: CurrencyResponse): Double {
+        return list.sumOf {
+            exchange(
+                currencyRate.conversion_rates[Constants.getCurrency(it.currency)]!!,
+                currencyRate.conversion_rates["USD"]!!,
+                it.amount
+            )
+        }
+    }
+
+    fun exchange(from: Double, to: Double, value: Double): Double {
+        return (value / from) * to
+    }
+
+    val gson = Gson()
+    fun objectToJson(response: CurrencyResponse): String {
+
+        return gson.toJson(response)
+    }
+
+    fun jsonToObject(json: String): CurrencyResponse {
+        return gson.fromJson(json, CurrencyResponse::class.java)
     }
 }

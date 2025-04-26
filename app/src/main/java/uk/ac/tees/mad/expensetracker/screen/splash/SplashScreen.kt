@@ -45,6 +45,7 @@ fun SplashScreen(navController: NavController,viewModel: SplashViewModel = hiltV
     val authSuccess by viewModel.authSuccess.collectAsState()
     val authError by viewModel.authError.collectAsState()
     val isFingerLock by viewModel.isFingerprintLock.collectAsState()
+    val isLoaded by viewModel.isLoaded.collectAsState()
     val activity = LocalActivity.current as? FragmentActivity
 
     val logoSize by animateDpAsState(
@@ -61,7 +62,7 @@ fun SplashScreen(navController: NavController,viewModel: SplashViewModel = hiltV
 
     val user = FirebaseAuth.getInstance().currentUser
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isLoaded) {
         delay(500)
         logoShrunk = true
         delay(1000)
@@ -72,16 +73,18 @@ fun SplashScreen(navController: NavController,viewModel: SplashViewModel = hiltV
                 viewModel.authenticate(it)
             }
         }else{
-            navController.navigate(if(user==null) Routes.AUTH_SCREEN else Routes.MAIN_SCREEN){
-                popUpTo(Routes.SPLASH_SCREEN){
-                    inclusive = true
+            if (isLoaded) {
+                navController.navigate(if(user==null) Routes.AUTH_SCREEN else Routes.MAIN_SCREEN){
+                    popUpTo(Routes.SPLASH_SCREEN){
+                        inclusive = true
+                    }
                 }
             }
         }
     }
 
-    LaunchedEffect(authSuccess) {
-        if (authSuccess){
+    LaunchedEffect(authSuccess, isLoaded) {
+        if (authSuccess && isLoaded){
             navController.navigate(if(user==null) Routes.AUTH_SCREEN else Routes.MAIN_SCREEN){
                 popUpTo(Routes.SPLASH_SCREEN){
                     inclusive = true

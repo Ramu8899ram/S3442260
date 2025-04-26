@@ -7,16 +7,6 @@ object Constants {
     const val USERS = "users"
     const val EXPENSES = "expenses"
     const val APIKEY = "18055e06d1a4298f7e678e99"
-    fun getCategoryList(): List<CategoryModel>{
-        return listOf(
-            CategoryModel("Shopping",100.34,14,"Card",R.drawable.shopping, MyColors.categoryColor1),
-            CategoryModel("Food",130.34,15,"Card.Cash",R.drawable.food, MyColors.categoryColor2),
-            CategoryModel("Gifts",80.72,12,"Card.Upi",R.drawable.gift, MyColors.categoryColor3),
-            CategoryModel("Subscriptions",496.34,20,"Upi",R.drawable.subscription, MyColors.categoryColor4),
-            CategoryModel("Entertainment",140.34,16,"Cash",R.drawable.entertainment, MyColors.categoryColor5),
-            CategoryModel("Others",600.44,30,"Card",R.drawable.others, MyColors.categoryColor6)
-        )
-    }
 
     fun getCurrencyIcon(currency: Int): Int{
         return when(currency){
@@ -31,12 +21,12 @@ object Constants {
 
     fun getCategoryInfo(cat: Int): CategoryModel{
         return when(cat){
-            1-> CategoryModel("Shopping",100.34,14,"Card",R.drawable.shopping, MyColors.categoryColor1)
-            2-> CategoryModel("Food",130.34,15,"Card.Cash",R.drawable.food, MyColors.categoryColor2)
-            3-> CategoryModel("Gifts",80.72,12,"Card.Upi",R.drawable.gift, MyColors.categoryColor3)
-            4-> CategoryModel("Subscriptions",496.34,20,"Upi",R.drawable.subscription, MyColors.categoryColor4)
-            5-> CategoryModel("Entertainment",140.34,16,"Cash",R.drawable.entertainment, MyColors.categoryColor5)
-            else -> CategoryModel("Others",600.44,30,"Card",R.drawable.others, MyColors.categoryColor6)
+            1-> CategoryModel("Shopping",1,R.drawable.shopping, MyColors.categoryColor1)
+            2-> CategoryModel("Food",2,R.drawable.food, MyColors.categoryColor2)
+            3-> CategoryModel("Gifts",3,R.drawable.gift, MyColors.categoryColor3)
+            4-> CategoryModel("Subscriptions",4,R.drawable.subscription, MyColors.categoryColor4)
+            5-> CategoryModel("Entertainment",5,R.drawable.entertainment, MyColors.categoryColor5)
+            else -> CategoryModel("Others",6,R.drawable.others, MyColors.categoryColor6)
         }
     }
 

@@ -13,17 +13,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DashboardTopAppbar() {
+fun DashboardTopAppbar(icon: Int) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(top = 32.dp, bottom = 8.dp)
             .fillMaxWidth()
     ) {
-        Text(
-            "$10245.00",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+        CurrencyTextRow(
+            text = "10245.00",
+            icon = icon,
+            fontSize = 24,
+            isBold = true,
+            iconSize = 22
         )
         Text("Total Balance", color = Color.Gray, fontSize = 12.sp)
     }

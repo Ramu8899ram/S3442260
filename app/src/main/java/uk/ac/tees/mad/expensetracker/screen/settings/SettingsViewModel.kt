@@ -30,8 +30,8 @@ class SettingsViewModel @Inject constructor(
     private val _isFingerprintLock = MutableStateFlow(false)
     val isFingerprintLock:StateFlow<Boolean> get() = _isFingerprintLock
 
-    private val _selectedCurrency = MutableStateFlow("usd")
-    val selectedCurrency:StateFlow<String> get() = _selectedCurrency
+    private val _selectedCurrency = MutableStateFlow(0)
+    val selectedCurrency:StateFlow<Int> get() = _selectedCurrency
 
     init {
         _name.value = auth.currentUser?.displayName.toString()
@@ -73,7 +73,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun saveSelectedCurrency(newCurrency:String){
+    fun saveSelectedCurrency(newCurrency: Int){
         viewModelScope.launch {
             dataStoreManager.saveSelectedCurrency(newCurrency)
             _selectedCurrency.value = newCurrency

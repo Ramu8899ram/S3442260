@@ -33,13 +33,13 @@ import uk.ac.tees.mad.expensetracker.util.Constants
 
 @Composable
 fun ExpenseAmountRow(
+    selectedCurrency: Int,
     onAmountChange:(String)-> Unit,
     onCurrencyChange:(Int)-> Unit
 ) {
     val amount = rememberSaveable { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
-    var currentCurrency by rememberSaveable { mutableIntStateOf(0) }
-    val currencyOptions = listOf("usd","inr","eur", "jpy", "gbp", "aud","cad", "chf")
+    val currencyOptions = Constants.getCurrencyList()
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Amount:", fontSize = 22.sp)
         Spacer(Modifier.height(8.dp))
@@ -52,7 +52,7 @@ fun ExpenseAmountRow(
                 placeholder = { Text("0.00") },
                 leadingIcon = {
                     Icon(
-                        imageVector = ImageVector.vectorResource(Constants.getCurrencyIcon(currentCurrency)),
+                        imageVector = ImageVector.vectorResource(Constants.getCurrencyIcon(selectedCurrency)),
                         contentDescription = "currency_symbol",
                     )
                 },
@@ -70,7 +70,7 @@ fun ExpenseAmountRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = currencyOptions[currentCurrency].uppercase(), fontSize = 18.sp)
+                Text(text = currencyOptions[selectedCurrency], fontSize = 18.sp)
                 Icon(Icons.Default.ArrowDropDown, contentDescription = "Dropdown Icon")
             }
 
@@ -82,7 +82,6 @@ fun ExpenseAmountRow(
                     DropdownMenuItem(
                         text = { Text(option.uppercase(), fontSize = 16.sp) },
                         onClick = {
-                            currentCurrency = idx
                             onCurrencyChange(idx)
                             expanded = false
                         }

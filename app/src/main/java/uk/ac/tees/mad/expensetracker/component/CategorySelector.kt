@@ -25,12 +25,13 @@ fun CategorySelector(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            itemsIndexed(Constants.getCategoryList()) { idx,item->
+            items(6) { idx->
+                val catItem = Constants.getCategoryInfo(idx+1)
                 IconTextCard(
                     { onClick(idx + 1) },
                     selectedCategory == idx + 1,
-                    item.category,
-                    item.icon
+                    catItem.category,
+                    catItem.icon
                 )
             }
         }

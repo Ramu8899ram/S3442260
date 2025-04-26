@@ -24,14 +24,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import uk.ac.tees.mad.expensetracker.util.Constants
 
 @Composable
 fun CurrencySelector(
-    currentCurrency: String,
-    onCurrencyChange: (String) -> Unit,
+    currentCurrency: Int,
+    onCurrencyChange: (Int) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val currencyOptions = listOf("usd","inr","eur", "jpy", "gbp", "aud","cad", "chf")
+    val currencyOptions = Constants.getCurrencyList()
 
     Card(
         modifier = Modifier
@@ -49,7 +50,7 @@ fun CurrencySelector(
         ) {
             Text(text = "Selected Currency: ",
                 modifier = Modifier.weight(1f))
-            Text(text = currentCurrency.uppercase(), fontSize = 18.sp)
+            Text(text = currencyOptions[currentCurrency], fontSize = 18.sp)
             Icon(Icons.Default.ArrowDropDown, contentDescription = "Dropdown Icon")
         }
 
@@ -57,11 +58,11 @@ fun CurrencySelector(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            currencyOptions.forEach { option ->
+            currencyOptions.forEachIndexed { idx,option ->
                 DropdownMenuItem(
-                    text = { Text(option.uppercase(), fontSize = 16.sp) },
+                    text = { Text(option, fontSize = 16.sp) },
                     onClick = {
-                        onCurrencyChange(option)
+                        onCurrencyChange(idx)
                         expanded = false
                     }
                 )

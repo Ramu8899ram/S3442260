@@ -1,6 +1,5 @@
 package uk.ac.tees.mad.expensetracker.screen.splash
 
-import android.util.Log
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
@@ -12,12 +11,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import uk.ac.tees.mad.expensetracker.data.local.datastore.DataStoreManager
+import uk.ac.tees.mad.expensetracker.data.local.remote.ExchangeApiService
+import uk.ac.tees.mad.expensetracker.util.Constants
+import uk.ac.tees.mad.expensetracker.util.Utils
 import java.util.concurrent.Executor
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager,
+    exchangeApiService: ExchangeApiService,
     private val executor: Executor
 ):ViewModel() {
 
@@ -27,13 +30,26 @@ class SplashViewModel @Inject constructor(
     private val _authFailed = MutableStateFlow(false)
     val authFailed:StateFlow<Boolean> get() = _authFailed
 
+    private val _isLoaded = MutableStateFlow(false)
+    val isLoaded:StateFlow<Boolean> get() = _isLoaded
+
     private val _authError = MutableStateFlow(false)
     val authError:StateFlow<Boolean> get() = _authError
 
     private val _isFingerprintLock = MutableStateFlow(false)
     val isFingerprintLock:StateFlow<Boolean> get() = _isFingerprintLock
 
+    val apiKey ="18055e06d1a4298f7e678e99"
     init {
+        viewModelScope.launch {
+            try {
+                val response = exchangeApiService.getExchangeRate(apiKey, "USD")
+                dataStoreManager.saveExchangeRate(Utils.objectToJson(response))
+                _isLoaded.value = true
+            } catch (e: Exception) {
+                _isLoaded.value = true
+            }
+        }
         viewModelScope.launch {
             _isFingerprintLock.value = dataStoreManager.isFingerprintLockFlow.first()
         }

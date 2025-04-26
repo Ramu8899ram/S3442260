@@ -14,6 +14,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -23,16 +25,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import uk.ac.tees.mad.expensetracker.component.DashboardTopAppbar
 import uk.ac.tees.mad.expensetracker.screen.dashboard.DashboardScreen
+import uk.ac.tees.mad.expensetracker.screen.dashboard.DashboardViewModel
 import uk.ac.tees.mad.expensetracker.screen.history.HistoryScreen
 import uk.ac.tees.mad.expensetracker.screen.settings.SettingsScreen
+import uk.ac.tees.mad.expensetracker.util.Constants
 import uk.ac.tees.mad.expensetracker.util.Routes
 
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(navController: NavController, viewModel: DashboardViewModel = hiltViewModel()) {
     val selectedScreen = rememberSaveable { mutableIntStateOf(0) }
+    val selectedCurrency by viewModel.selectedCurrency.collectAsState()
     val context = LocalContext.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -55,7 +61,7 @@ fun MainScreen(navController: NavController) {
     Scaffold(
         topBar = {
             if (selectedScreen.intValue == 0) {
-                DashboardTopAppbar()
+                DashboardTopAppbar(Constants.getCurrencyIcon(selectedCurrency))
             }
             else if(selectedScreen.intValue==1){
                 Text(
@@ -96,7 +102,7 @@ fun MainScreen(navController: NavController) {
     ) { paddingValues ->
         val modifier = Modifier.padding(paddingValues)
         when (selectedScreen.intValue) {
-            0 -> DashboardScreen(modifier)
+            0 -> DashboardScreen(modifier, viewModel)
             1 -> HistoryScreen(modifier)
             2 -> SettingsScreen(modifier, navController)
         }

@@ -17,6 +17,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,7 +47,7 @@ fun AddExpenseScreen(
     val selectedCategory = rememberSaveable { mutableIntStateOf(0) }
     val note = rememberSaveable { mutableStateOf("") }
     val amount = rememberSaveable { mutableStateOf("") }
-    val selectedCurrency = rememberSaveable { mutableIntStateOf(0) }
+    val selectedCurrency by viewModel.selectedCurrency.collectAsState()
     val receipt = rememberSaveable { mutableStateOf<Bitmap?>(null) }
     val context = LocalContext.current
 
@@ -77,8 +79,9 @@ fun AddExpenseScreen(
             .fillMaxSize()
         ){
             ExpenseAmountRow(
+                selectedCurrency,
                 onAmountChange = {amount.value = it},
-                onCurrencyChange = {selectedCurrency.intValue = it}
+                onCurrencyChange = {viewModel.onCurrencyChange(it)}
             )
             PaymentModeSelector(
                 {selectedPaymentMode.intValue = it},
@@ -109,7 +112,7 @@ fun AddExpenseScreen(
             Button({
                 viewModel.addExpense(
                     amount = amount.value,
-                    currency = selectedCurrency.intValue,
+                    currency = selectedCurrency,
                     pMode = selectedPaymentMode.intValue,
                     category = selectedCategory.intValue,
                     note = note.value,
