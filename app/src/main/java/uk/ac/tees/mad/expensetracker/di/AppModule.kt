@@ -16,6 +16,8 @@ import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseDao
 import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseDatabase
 import uk.ac.tees.mad.expensetracker.data.repository.Repository
 import uk.ac.tees.mad.expensetracker.data.repository.RepositoryImpl
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 private val Context.dataStore by preferencesDataStore(name = "app_preferences")
@@ -23,6 +25,9 @@ private val Context.dataStore by preferencesDataStore(name = "app_preferences")
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    fun provideExecutor(): Executor = Executors.newSingleThreadExecutor()
 
     @Provides
     @Singleton

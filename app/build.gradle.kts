@@ -44,6 +44,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -76,6 +77,9 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Biometric auth
+    implementation("androidx.biometric:biometric:1.4.0-alpha03")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

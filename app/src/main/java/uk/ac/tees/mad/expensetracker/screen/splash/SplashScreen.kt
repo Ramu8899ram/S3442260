@@ -1,5 +1,6 @@
 package uk.ac.tees.mad.expensetracker.screen.splash
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -17,6 +18,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
@@ -34,9 +38,14 @@ import uk.ac.tees.mad.expensetracker.R
 import uk.ac.tees.mad.expensetracker.util.Routes
 
 @Composable
-fun SplashScreen(navController: NavController) {
+fun SplashScreen(navController: NavController,viewModel: SplashViewModel = hiltViewModel()) {
     var logoShrunk by remember { mutableStateOf(false) }
     var showProgressbar by remember { mutableStateOf(false) }
+
+    val authSuccess by viewModel.authSuccess.collectAsState()
+    val authError by viewModel.authError.collectAsState()
+    val isFingerLock by viewModel.isFingerprintLock.collectAsState()
+    val activity = LocalActivity.current as? FragmentActivity
 
     val logoSize by animateDpAsState(
         targetValue = if (logoShrunk) 40.dp else 120.dp,
@@ -58,10 +67,32 @@ fun SplashScreen(navController: NavController) {
         delay(1000)
         showProgressbar = true
         delay(1500)
-        navController.navigate(if(user==null) Routes.AUTH_SCREEN else Routes.MAIN_SCREEN){
-            popUpTo(Routes.SPLASH_SCREEN){
-                inclusive = true
+        if (isFingerLock) {
+            activity?.let {
+                viewModel.authenticate(it)
             }
+        }else{
+            navController.navigate(if(user==null) Routes.AUTH_SCREEN else Routes.MAIN_SCREEN){
+                popUpTo(Routes.SPLASH_SCREEN){
+                    inclusive = true
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(authSuccess) {
+        if (authSuccess){
+            navController.navigate(if(user==null) Routes.AUTH_SCREEN else Routes.MAIN_SCREEN){
+                popUpTo(Routes.SPLASH_SCREEN){
+                    inclusive = true
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(authError) {
+        if (authError){
+            activity?.finish()
         }
     }
 
