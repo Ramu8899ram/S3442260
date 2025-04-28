@@ -36,7 +36,7 @@ class AddExpenseViewModel @Inject constructor(
     fun addExpense(
         amount: String, currency: Int, pMode: Int,
         category: Int, note: String, image: Bitmap?,
-        context: Context, onComplete:()-> Unit
+        date:Long, context: Context, onComplete:()-> Unit
     ) {
         if (amount.isEmpty()){
             Toast.makeText(context, "Add amount", Toast.LENGTH_SHORT).show()
@@ -56,7 +56,8 @@ class AddExpenseViewModel @Inject constructor(
             paymentMode = pMode,
             category = category,
             note = note,
-            receiptImage = if (image!=null) Utils.bitmapToBase64(image)?:"" else ""
+            receiptImage = if (image!=null) Utils.bitmapToBase64(image)?:"" else "",
+            time = date
         )
         fireStore.collection(Constants.USERS)
             .document(userId)

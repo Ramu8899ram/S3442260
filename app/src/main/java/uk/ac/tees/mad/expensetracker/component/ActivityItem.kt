@@ -1,6 +1,7 @@
 package uk.ac.tees.mad.expensetracker.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,11 +30,13 @@ import uk.ac.tees.mad.expensetracker.util.Utils.getDateTimeFromMillis
 
 @Composable
 fun ActivityItem(
-    expense: ExpenseEntity
+    expense: ExpenseEntity,
+    onClick:()-> Unit
 ) {
     val catModel = Constants.getCategoryInfo(expense.category)
     Column(
         modifier = Modifier.padding(16.dp)
+            .clickable{onClick()}
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

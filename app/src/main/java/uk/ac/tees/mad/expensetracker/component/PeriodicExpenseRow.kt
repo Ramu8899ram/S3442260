@@ -48,9 +48,9 @@ fun PeriodicExpenseRow(list: List<ExpenseEntity>, selectedCurrency:Int, rate: Cu
                     CurrencyTextRow(
                         text = String.format("%.2f",dayAmount),
                         icon = Constants.getCurrencyIcon(selectedCurrency),
-                        fontSize = 22,
+                        fontSize = 18,
                         isBold = true,
-                        iconSize = 20
+                        iconSize = 18
                     )
                 }
             }
@@ -70,9 +70,9 @@ fun PeriodicExpenseRow(list: List<ExpenseEntity>, selectedCurrency:Int, rate: Cu
                     CurrencyTextRow(
                         text = String.format("%.2f",weeklyAmount),
                         icon = Constants.getCurrencyIcon(selectedCurrency),
-                        fontSize = 22,
+                        fontSize = 18,
                         isBold = true,
-                        iconSize = 20
+                        iconSize = 18
                     )
                 }
             }
@@ -91,9 +91,9 @@ fun PeriodicExpenseRow(list: List<ExpenseEntity>, selectedCurrency:Int, rate: Cu
                     CurrencyTextRow(
                         text = String.format("%.2f",monthlyAmount),
                         icon = Constants.getCurrencyIcon(selectedCurrency),
-                        fontSize = 22,
+                        fontSize = 18,
                         isBold = true,
-                        iconSize = 20
+                        iconSize = 18
                     )
                 }
             }

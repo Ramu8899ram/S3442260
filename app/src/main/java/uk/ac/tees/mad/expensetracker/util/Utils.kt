@@ -87,6 +87,10 @@ object Utils {
         return Pair(entries, labels)
     }
 
+    fun getDate(timeMillis:Long):String{
+        return SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(timeMillis))
+    }
+
     fun getExpenseSum(list: List<ExpenseEntity>, currencyRate: CurrencyResponse, selectedCurr: String): Double {
         return list.sumOf {
             exchange(
