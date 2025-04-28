@@ -1,5 +1,6 @@
 package uk.ac.tees.mad.expensetracker.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +27,7 @@ import uk.ac.tees.mad.expensetracker.model.CurrencyResponse
 import uk.ac.tees.mad.expensetracker.util.Constants
 import uk.ac.tees.mad.expensetracker.util.Utils
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun CategoryExpenseItem(
     list: List<ExpenseEntity>,
@@ -60,11 +59,11 @@ fun CategoryExpenseItem(
             modifier = Modifier.weight(1f)
         ) {
             Row {
-                val sum = Utils.getExpenseSum(list, rate)
+                val sum = Utils.getExpenseSum(list, rate, Constants.getCurrency(sCurr))
                 Text(categoryModel.category, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.weight(1f))
                 CurrencyTextRow(
-                    text = "$sum",
+                    text = String.format("%.2f",sum),
                     icon = Constants.getCurrencyIcon(sCurr),
                     fontSize = 22,
                     isBold = true,
@@ -72,7 +71,7 @@ fun CategoryExpenseItem(
                 )
             }
             Row {
-                val sum = Utils.getExpenseSum(list, rate)
+                val sum = Utils.getExpenseSum(list, rate, Constants.getCurrency(sCurr))
                 val percent = if (totalSum == 0.0) 0 else (sum / totalSum) * 100
                 Text("Cash", color = Color.Gray)
                 Spacer(Modifier.weight(1f))

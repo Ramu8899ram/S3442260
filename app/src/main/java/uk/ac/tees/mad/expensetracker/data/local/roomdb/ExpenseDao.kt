@@ -15,4 +15,7 @@ interface ExpenseDao {
     @Query("SELECT * FROM expense_table")
     fun getExpenses(): Flow<List<ExpenseEntity>>
 
+    @Query("DELETE FROM expense_table")
+    suspend fun deleteAll()
+
 }

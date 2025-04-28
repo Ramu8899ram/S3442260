@@ -29,7 +29,7 @@ fun DashboardScreen(
         modifier = modifier.fillMaxSize()
     ) {
         if (exchangeRate!=null){
-            ExpenseBarChart(last30Days, exchangeRate!!)
+            ExpenseBarChart(last30Days, exchangeRate!!, selectedCurrency)
             Spacer(Modifier.height(8.dp))
             PeriodicExpenseRow(last30Days,selectedCurrency, exchangeRate!!)
             Spacer(Modifier.height(20.dp))
@@ -41,7 +41,7 @@ fun DashboardScreen(
                     CategoryExpenseItem(
                         last30Days.filter { it.category == idx+1 },
                         Constants.getCategoryInfo(idx+1),
-                        Utils.getExpenseSum(last30Days, exchangeRate!!),
+                        Utils.getExpenseSum(last30Days, exchangeRate!!, Constants.getCurrency(selectedCurrency)),
                         selectedCurrency,
                         exchangeRate!!
                     )

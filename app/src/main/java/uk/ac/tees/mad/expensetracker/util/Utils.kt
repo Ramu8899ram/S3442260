@@ -55,15 +55,16 @@ object Utils {
 
     fun prepareChartData(
         expenses: List<ExpenseEntity>,
-        currencyRate: CurrencyResponse
+        currencyRate: CurrencyResponse,
+        selectedCurr: String
     ): Pair<List<BarEntry>, List<String>> {
         val groupedExpenses = expenses
-            .groupBy { it.time / (24 * 60 * 60 * 1000) } // Group by day
+            .groupBy { it.time / (24 * 60 * 60 * 1000) }
             .mapValues { entry ->
                 entry.value.sumOf {
                     exchange(
-                        currencyRate.conversion_rates["USD"]!!,
-                        currencyRate.conversion_rates[Constants.getCurrency(it.currency)]!!,
+                        currencyRate.conversion_rates[Constants.getCurrency(it.currency)]?:1.0,
+                        currencyRate.conversion_rates[selectedCurr]?:1.0,
                         it.amount
                     )
                 }
@@ -86,11 +87,11 @@ object Utils {
         return Pair(entries, labels)
     }
 
-    fun getExpenseSum(list: List<ExpenseEntity>, currencyRate: CurrencyResponse): Double {
+    fun getExpenseSum(list: List<ExpenseEntity>, currencyRate: CurrencyResponse, selectedCurr: String): Double {
         return list.sumOf {
             exchange(
-                currencyRate.conversion_rates[Constants.getCurrency(it.currency)]!!,
-                currencyRate.conversion_rates["USD"]!!,
+                currencyRate.conversion_rates[Constants.getCurrency(it.currency)]?:1.0,
+                currencyRate.conversion_rates[selectedCurr]?:1.0,
                 it.amount
             )
         }

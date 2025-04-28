@@ -1,5 +1,6 @@
 package uk.ac.tees.mad.expensetracker.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import uk.ac.tees.mad.expensetracker.model.CurrencyResponse
 import uk.ac.tees.mad.expensetracker.util.Constants
 import uk.ac.tees.mad.expensetracker.util.Utils
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun PeriodicExpenseRow(list: List<ExpenseEntity>, selectedCurrency:Int, rate: CurrencyResponse) {
     val today = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
@@ -40,10 +42,11 @@ fun PeriodicExpenseRow(list: List<ExpenseEntity>, selectedCurrency:Int, rate: Cu
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    val dayAmount = Utils.getExpenseSum(list.filter { it.time >= today }, rate)
+                    val dayAmount = Utils.getExpenseSum(list.filter { it.time >= today }, rate,
+                        Constants.getCurrency(selectedCurrency))
                     Text("Day", fontSize = 16.sp, color = Color.Gray)
                     CurrencyTextRow(
-                        text = "$dayAmount",
+                        text = String.format("%.2f",dayAmount),
                         icon = Constants.getCurrencyIcon(selectedCurrency),
                         fontSize = 22,
                         isBold = true,
@@ -61,10 +64,11 @@ fun PeriodicExpenseRow(list: List<ExpenseEntity>, selectedCurrency:Int, rate: Cu
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    val weeklyAmount = Utils.getExpenseSum(list.filter { it.time >= weekly }, rate)
+                    val weeklyAmount = Utils.getExpenseSum(list.filter { it.time >= weekly }, rate,
+                        Constants.getCurrency(selectedCurrency))
                     Text("Week", fontSize = 16.sp, color = Color.Gray)
                     CurrencyTextRow(
-                        text = "$weeklyAmount",
+                        text = String.format("%.2f",weeklyAmount),
                         icon = Constants.getCurrencyIcon(selectedCurrency),
                         fontSize = 22,
                         isBold = true,
@@ -82,10 +86,10 @@ fun PeriodicExpenseRow(list: List<ExpenseEntity>, selectedCurrency:Int, rate: Cu
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    val monthlyAmount = Utils.getExpenseSum(list, rate)
+                    val monthlyAmount = Utils.getExpenseSum(list, rate,Constants.getCurrency(selectedCurrency))
                     Text("Month", fontSize = 16.sp, color = Color.Gray)
                     CurrencyTextRow(
-                        text = "$monthlyAmount",
+                        text = String.format("%.2f",monthlyAmount),
                         icon = Constants.getCurrencyIcon(selectedCurrency),
                         fontSize = 22,
                         isBold = true,

@@ -15,11 +15,12 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseEntity
 import uk.ac.tees.mad.expensetracker.model.CurrencyResponse
+import uk.ac.tees.mad.expensetracker.util.Constants
 import uk.ac.tees.mad.expensetracker.util.Utils.prepareChartData
 
 @Composable
-fun ExpenseBarChart(expenses: List<ExpenseEntity>, rate: CurrencyResponse) {
-    val (chartData, labels) = remember(expenses) { prepareChartData(expenses, rate) }
+fun ExpenseBarChart(expenses: List<ExpenseEntity>, rate: CurrencyResponse, sCurr: Int) {
+    val (chartData, labels) = remember(expenses) { prepareChartData(expenses, rate, Constants.getCurrency(sCurr)) }
 
     AndroidView(
         factory = { context ->

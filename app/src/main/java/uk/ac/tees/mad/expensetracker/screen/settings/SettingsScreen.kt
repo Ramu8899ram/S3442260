@@ -71,10 +71,11 @@ fun SettingsScreen(
             icon = Icons.AutoMirrored.Filled.ExitToApp,
             title = "Log Out",
             onClick = {
-                viewModel.logOut()
-                navController.navigate(Routes.AUTH_SCREEN) {
-                    popUpTo(Routes.MAIN_SCREEN) {
-                        inclusive = true
+                viewModel.logOut{
+                    navController.navigate(Routes.AUTH_SCREEN) {
+                        popUpTo(Routes.MAIN_SCREEN) {
+                            inclusive = true
+                        }
                     }
                 }
             }

@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "expense_table")
 data class ExpenseEntity(
     @PrimaryKey(autoGenerate = true) val id: Int=0,
-    val amount: Double,
-    val currency: Int,
-    val paymentMode: Int,
-    val category: Int,
-    val note: String,
-    val receiptImage: String,
+    val amount: Double=0.0,
+    val currency: Int=0,
+    val paymentMode: Int=0,
+    val category: Int=0,
+    val note: String="",
+    val receiptImage: String="",
     val time: Long = System.currentTimeMillis()
 )

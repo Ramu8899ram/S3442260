@@ -15,4 +15,8 @@ class RepositoryImpl @Inject constructor(
     override fun getExpenses(): Flow<List<ExpenseEntity>> {
         return dao.getExpenses()
     }
+
+    override suspend fun deleteAll() {
+        dao.deleteAll()
+    }
 }

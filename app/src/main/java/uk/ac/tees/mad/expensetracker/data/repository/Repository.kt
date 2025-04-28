@@ -6,4 +6,5 @@ import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseEntity
 interface Repository {
     suspend fun insertExpense(entity: ExpenseEntity)
     fun getExpenses(): Flow<List<ExpenseEntity>>
+    suspend fun deleteAll()
 }

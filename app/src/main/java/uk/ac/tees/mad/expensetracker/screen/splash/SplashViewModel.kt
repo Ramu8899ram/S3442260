@@ -5,6 +5,8 @@ import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +14,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import uk.ac.tees.mad.expensetracker.data.local.datastore.DataStoreManager
 import uk.ac.tees.mad.expensetracker.data.local.remote.ExchangeApiService
+import uk.ac.tees.mad.expensetracker.data.local.roomdb.ExpenseEntity
+import uk.ac.tees.mad.expensetracker.data.repository.Repository
 import uk.ac.tees.mad.expensetracker.util.Constants
+import uk.ac.tees.mad.expensetracker.util.Constants.APIKEY
 import uk.ac.tees.mad.expensetracker.util.Utils
 import java.util.concurrent.Executor
 import javax.inject.Inject
@@ -21,9 +26,11 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager,
     exchangeApiService: ExchangeApiService,
+    private val repository: Repository,
+    private val db: FirebaseFirestore,
+    private val auth: FirebaseAuth,
     private val executor: Executor
 ):ViewModel() {
-
     private val _authSuccess = MutableStateFlow(false)
     val authSuccess:StateFlow<Boolean> get() = _authSuccess
 
@@ -39,19 +46,46 @@ class SplashViewModel @Inject constructor(
     private val _isFingerprintLock = MutableStateFlow(false)
     val isFingerprintLock:StateFlow<Boolean> get() = _isFingerprintLock
 
-    val apiKey ="18055e06d1a4298f7e678e99"
+    private val userId = auth.currentUser?.uid?:""
     init {
         viewModelScope.launch {
             try {
-                val response = exchangeApiService.getExchangeRate(apiKey, "USD")
+                val response = exchangeApiService.getExchangeRate(APIKEY, "USD")
                 dataStoreManager.saveExchangeRate(Utils.objectToJson(response))
                 _isLoaded.value = true
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _isLoaded.value = true
             }
         }
         viewModelScope.launch {
             _isFingerprintLock.value = dataStoreManager.isFingerprintLockFlow.first()
+        }
+
+        viewModelScope.launch {
+            val data = repository.getExpenses().first()
+            if (data.isEmpty() && !userId.isEmpty()){
+                db.collection(Constants.USERS)
+                    .document(userId)
+                    .collection(Constants.EXPENSES)
+                    .get().addOnSuccessListener { documents->
+                        for (doc in documents){
+                            val mExpense = doc.toObject(ExpenseEntity::class.java)
+                            val entity = ExpenseEntity(
+                                amount = mExpense.amount,
+                                currency = mExpense.currency,
+                                paymentMode = mExpense.paymentMode,
+                                category = mExpense.category,
+                                note =mExpense.note,
+                                receiptImage = mExpense.receiptImage,
+                                time = mExpense.time
+                            )
+
+                            viewModelScope.launch {
+                                repository.insertExpense(entity)
+                            }
+                        }
+                    }
+            }
         }
     }
 

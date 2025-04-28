@@ -11,11 +11,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import uk.ac.tees.mad.expensetracker.data.local.datastore.DataStoreManager
+import uk.ac.tees.mad.expensetracker.data.repository.Repository
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager,
+    private val repository: Repository,
     private val auth: FirebaseAuth
 ):ViewModel() {
 
@@ -80,7 +82,11 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun logOut(){
-        auth.signOut()
+    fun logOut(onComplete:()-> Unit){
+        viewModelScope.launch {
+            repository.deleteAll()
+            auth.signOut()
+            onComplete()
+        }
     }
 }
